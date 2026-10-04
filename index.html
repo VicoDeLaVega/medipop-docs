@@ -1,0 +1,417 @@
+<title>Medipop for APTITUD</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>
+  /* Layout: single reading column with wide figure rows; a left rule marks each numbered step of the flow. */
+  :root {
+    --bg: #f5f7f8;
+    --surface: #ffffff;
+    --ink: #13222e;
+    --muted: #556472;
+    --line: #d6dee4;
+    --accent: #0e6e66;
+    --accent-soft: #e0f1ee;
+    --warn: #8a5a00;
+    --warn-soft: #fbf0d9;
+    --done: #1d6b3a;
+    --done-soft: #e2f3e8;
+    --mock-bg: #f8f7fd; --mock-card: #eeedf6; --mock-ink: #1b1b21; --mock-muted: #5b5d6b; --mock-line: #7a7d8c; --mock-accent: #405e95;
+    --font-display: "IBM Plex Serif", Georgia, serif;
+    --font-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f171d; --surface: #16222b; --ink: #e4ecf1; --muted: #9aabb8; --line: #2a3a46;
+      --accent: #5cc4b8; --accent-soft: #163a37; --warn: #f0c36b; --warn-soft: #3a2e16;
+      --done: #7fd39b; --done-soft: #183526; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f171d; --surface: #16222b; --ink: #e4ecf1; --muted: #9aabb8; --line: #2a3a46;
+    --accent: #5cc4b8; --accent-soft: #163a37; --warn: #f0c36b; --warn-soft: #3a2e16;
+    --done: #7fd39b; --done-soft: #183526; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--font-body); }
+  .page { max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; }
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+  h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 600; }
+  h2 { font-size: 1.6rem; font-weight: 600; margin-bottom: 12px; }
+  h3 { font-size: 1.15rem; font-weight: 500; }
+  p { margin: 0; max-width: 68ch; }
+  section { display: grid; gap: 16px; padding-block: 36px; border-top: 1px solid var(--line); }
+  .eyebrow { font: 500 0.78rem/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .lede { font-size: 1.15rem; color: var(--muted); }
+  header.intro { display: grid; gap: 14px; padding-bottom: 32px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font: 500 0.8rem/1 var(--font-mono); padding: 6px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .chip.warn { background: var(--warn-soft); color: var(--warn); }
+  .chip.done { background: var(--done-soft); color: var(--done); }
+  code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
+
+  /* Flow diagram */
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; counter-reset: step; }
+  .step { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 6px; min-width: 0; }
+  .step::before { counter-increment: step; content: counter(step); font: 500 0.75rem/1 var(--font-mono); color: var(--accent); }
+  .step strong { font-weight: 600; }
+  .step span { color: var(--muted); font-size: 0.9rem; }
+  .step.device { border-color: var(--accent); }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; color: var(--muted); font-size: 0.9rem; }
+  .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 6px; border: 1px solid var(--line); background: var(--surface); }
+  .legend i.device { border-color: var(--accent); }
+
+  /* Building blocks */
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font: 500 0.78rem/1.2 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  tr:last-child td { border-bottom: 0; }
+
+  /* Screens */
+  .screens { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; align-items: start; }
+  figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+  figure img { display: block; width: 100%; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+  .screens.phones { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .screens.wide { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+  /* Language switch */
+  .langbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; display: flex; justify-content: flex-end; gap: 6px; padding: 10px 20px; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .langbar button { font: 500 0.85rem/1 var(--font-mono); padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+  .langbar button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+  .langbar button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  /* Generated illustration of the review screen */
+  .mock { max-width: 240px; border-radius: 12px; border: 1px solid var(--line); background: var(--mock-bg); color: var(--mock-ink); padding: 14px 10px; display: flex; flex-direction: column; gap: 7px; font: 10px/1.25 var(--font-body); box-sizing: border-box; }
+  .mock-bar { font-size: 13px; margin: 18px 0 4px; }
+  .mock-group { background: var(--mock-card); border-radius: 8px; padding: 7px; display: grid; gap: 5px; }
+  .mock-group b { font-weight: 600; font-size: 10.5px; }
+  .mock-field { border: 1px solid var(--mock-line); border-radius: 4px; padding: 3px 6px; background: var(--mock-bg); min-width: 0; }
+  .mock-field small, .mock-dictation small { display: block; font-size: 7.5px; color: var(--mock-accent); }
+  .mock-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .mock-dictation { font-size: 9px; color: var(--mock-muted); }
+  .mock-button { margin-top: 6px; background: var(--mock-accent); color: #fff; border-radius: 999px; text-align: center; padding: 7px; font-weight: 500; }
+  figure.phone img { max-width: 240px; }
+  figcaption { color: var(--muted); font-size: 0.9rem; }
+
+  /* Steps and status lists */
+  ol.steps { margin: 0; padding-left: 1.3em; display: grid; gap: 10px; max-width: 70ch; }
+  .status { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .status > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+  .status ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+  .note { background: var(--warn-soft); color: var(--ink); border-radius: 10px; padding: 14px 16px; max-width: 76ch; }
+  .note strong { color: var(--warn); }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<nav class="langbar" aria-label="Language">
+  <button type="button" data-set="en" aria-pressed="true">English</button>
+  <button type="button" data-set="fr" aria-pressed="false">Français</button>
+</nav>
+<div class="page" data-lang="en" lang="en">
+  <header class="intro">
+    <span class="eyebrow">Medipop · briefing for the APTITUD team · October 2026</span>
+    <h1>Medipop for APTITUD</h1>
+    <p class="lede">A tablet app that listens to a clinician, fills a structured form with an AI model running on the tablet itself, and sends the record to APTITUD only after the clinician has checked and validated it.</p>
+    <div class="chips">
+      <span class="chip warn">Pilot 1 · fictional data only</span>
+      <span class="chip">iPad &amp; iPhone · Android planned</span>
+      <span class="chip">English · Français · Español</span>
+    </div>
+  </header>
+
+  <section id="how">
+    <span class="eyebrow">How it works</span>
+    <h2>From dictation to a validated record</h2>
+    <div class="flow" role="list">
+      <div class="step device" role="listitem"><strong>Dictate</strong><span>The clinician speaks. The tablet turns speech into text in the chosen language.</span></div>
+      <div class="step device" role="listitem"><strong>Extract</strong><span>An AI model on the tablet fills the form fields from the text. No server involved.</span></div>
+      <div class="step device" role="listitem"><strong>Review</strong><span>The clinician corrects any field. Nothing is saved without this check.</span></div>
+      <div class="step device" role="listitem"><strong>Save</strong><span>The record is stored on the tablet, so work continues without Internet.</span></div>
+      <div class="step" role="listitem"><strong>Sync</strong><span>When online, records go to APTITUD's server. Each record is sent once, even after a retry.</span></div>
+      <div class="step" role="listitem"><strong>Use</strong><span>APTITUD admins see records in the dashboard and export them.</span></div>
+    </div>
+    <div class="legend"><span><i class="device"></i>Happens on the tablet</span><span><i></i>Happens on APTITUD's server</span></div>
+    <p>The original dictation is kept with each record, so anyone reviewing it later can see exactly what was said.</p>
+  </section>
+
+  <section id="blocks">
+    <span class="eyebrow">Architecture</span>
+    <h2>Three building blocks</h2>
+    <p>Medipop is designed so that other organizations, in other countries, can use the same app with their own forms and their own servers. What is specific to APTITUD stays private to APTITUD.</p>
+    <p>The fields to collect are not built into the app. APTITUD's addiction-medicine form is one configuration; a psychiatry or cardiology service would publish its own form, languages and AI model in the same way, without any change to the app.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Block</th><th>What it contains</th><th>Who sees it</th></tr></thead>
+      <tbody>
+        <tr><td><strong>medipop-core</strong></td><td>The app itself: dictation, on-tablet AI, forms, validation, local storage, export.</td><td>Open source (MIT licence)</td></tr>
+        <tr><td><strong>medipop-connectors</strong></td><td>Sign-in, organizations and roles, server database rules, the admin dashboard.</td><td>Open source (MIT licence)</td></tr>
+        <tr><td><strong>medipop-aptitud</strong></td><td>APTITUD's configuration: form fields, vocabularies, spreadsheet mapping, reports, deployment notes.</td><td>Private to APTITUD</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="screens">
+    <span class="eyebrow">Screens</span>
+    <h2>What clinicians and admins see</h2>
+    <div class="screens phones">
+      <figure class="phone"><img src="images/app-sign-in.jpg" alt="App sign-in screen with email and password fields"><figcaption>Sign-in. Accounts are created by APTITUD; a new account sees nothing until an admin adds it to the organization.</figcaption></figure>
+      <figure class="phone"><img src="images/app-home.jpg" alt="Home screen with the organization's form, a card asking to install the AI model, and buttons to dictate, enter fields, see history and sync"><figcaption>Home. The organization's form, a prompt to install the AI model the first time, dictation, manual entry, history and sync.</figcaption></figure>
+      <figure class="phone"><img src="images/app-dictate.jpg" alt="Dictation screen with English, Français and Español language choice and a large microphone button"><figcaption>Dictation. Choose the language, tap the microphone, speak, then “Extract fields”.</figcaption></figure>
+      <figure class="phone"><div class="mock" role="img" aria-label="Illustration of the review screen filled with fictional data">
+        <div class="mock-bar">‹&nbsp;&nbsp;Review Prescription</div>
+        <div class="mock-group"><b>Patient</b>
+          <div class="mock-field"><small>First name</small>Jane</div>
+          <div class="mock-field"><small>Last name</small>Doe</div>
+          <div class="mock-field"><small>Patient ID</small>TEST-0042</div></div>
+        <div class="mock-group"><b>Doctor</b>
+          <div class="mock-field"><small>Last name</small>Martin</div>
+          <div class="mock-field"><small>Doctor ID / license</small>DR-TEST-17</div></div>
+        <div class="mock-group"><b>Medication 1</b>
+          <div class="mock-field"><small>Name *</small>Amoxicillin</div>
+          <div class="mock-row"><div class="mock-field"><small>Strength</small>500 mg</div><div class="mock-field"><small>Form</small>tablet</div></div>
+          <div class="mock-field"><small>Posology</small>1 tablet three times a day</div>
+          <div class="mock-field"><small>Duration</small>7 days</div></div>
+        <div class="mock-dictation"><small>Original dictation</small>“Jane Doe, patient TEST-0042. Amoxicillin 500 milligrams, one tablet three times a day for seven days. Doctor Martin.”</div>
+        <div class="mock-button">Validate &amp; save</div>
+      </div><figcaption>Review, after extraction (illustration, fictional data). The clinician checks and corrects each field; the original dictation stays visible. Nothing is saved before “Validate &amp; save”.</figcaption></figure>
+    </div>
+    <div class="screens wide">
+      <figure><img src="images/dashboard-consultations.jpg" alt="Dashboard listing one validated consultation with its fields and original dictation"><figcaption>Dashboard. Validated records with their fields and the original dictation (test record).</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="config">
+    <span class="eyebrow">Configuration</span>
+    <h2>APTITUD controls the app from the dashboard</h2>
+    <p>An APTITUD admin sets everything below in the dashboard and publishes it. Tablets pick up the new version the next time the app is opened, never in the middle of a form. Records already saved keep the form version they were created with.</p>
+    <div class="screens wide">
+      <figure><img src="images/dashboard-config-1.jpg" alt="Configuration page: branding name, color, logo and dictation languages"><figcaption>Name, colour and logo shown in the app; dictation languages and the default one.</figcaption></figure>
+      <figure><img src="images/dashboard-config-2.jpg" alt="Configuration page: AI model choice and the list of form fields"><figcaption>The AI model tablets download, and the fields of the form. Every publication is versioned.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="install">
+    <span class="eyebrow">Installation</span>
+    <h2>Setting up a tablet</h2>
+    <ol class="steps">
+      <li><strong>Install the app.</strong> During pilot 1 the app is installed directly from a Mac on each test iPad. For wider testing it will be distributed through Apple TestFlight: a QR code opens the install page.</li>
+      <li><strong>Sign in</strong> with the account APTITUD created. The first sign-in needs Internet.</li>
+      <li><strong>Install the AI model</strong> when the app asks. It is a one-time 1.1 GB download, over Wi-Fi, with the app kept open. The file is checked against its published fingerprint before use.</li>
+      <li><strong>Allow the microphone and speech recognition</strong> the first time you dictate.</li>
+      <li><strong>Work as usual.</strong> Without network, records stay on the tablet and are sent automatically when the connection returns.</li>
+    </ol>
+  </section>
+
+  <section id="status">
+    <span class="eyebrow">Status</span>
+    <h2>What is built, what comes next</h2>
+    <div class="status">
+      <div>
+        <span class="chip done">Built and tested</span>
+        <ul>
+          <li>Dictation, on-tablet extraction, review and validation, tested on an iPad</li>
+          <li>Offline storage and automatic sync without duplicates</li>
+          <li>Sign-in, organizations, clinician and admin roles</li>
+          <li>Server rules: an organization can never see another's records (automated tests)</li>
+          <li>Admin dashboard: records, JSON export, configuration publishing</li>
+          <li>English, French and Spanish dictation; translated field labels</li>
+          <li>Organization branding: name, colour, logo</li>
+        </ul>
+      </div>
+      <div>
+        <span class="chip">Next</span>
+        <ul>
+          <li>The APTITUD form itself, from your documents</li>
+          <li>Two-way sync with the APTITUD spreadsheet</li>
+          <li>Regular activity reports</li>
+          <li>One public app: sign in with your work email and the app finds APTITUD automatically</li>
+          <li>Automatic model download in the background</li>
+          <li>Better extraction quality on real dictations</li>
+          <li>App interface in French and Spanish</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="data">
+    <span class="eyebrow">Health data</span>
+    <h2>Two pilots, two levels of protection</h2>
+    <p><strong>Pilot 1</strong> uses fictional data only, on a standard cloud database. No real patient name or detail may be entered, including in test dictations.</p>
+    <p><strong>Pilot 2</strong> uses real data. Before it starts: hosting certified for health data (HDS), speech recognition forced to run on the tablet, encrypted storage on the tablet, a data protection impact assessment validated by APTITUD's DPO, and a tested backup and restore procedure.</p>
+    <p class="note"><strong>Why speech recognition matters:</strong> depending on the device and language, Apple's recognizer may send audio to Apple's servers. For real data, Medipop will refuse to dictate unless recognition runs entirely on the tablet; manual entry remains available.</p>
+  </section>
+
+  <section id="needs">
+    <span class="eyebrow">Next steps</span>
+    <h2>What we need from APTITUD</h2>
+    <ol class="steps">
+      <li>The current form: fields, required fields, value lists and validation rules.</li>
+      <li>The spreadsheet: column headers and one invented example row.</li>
+      <li>An example of the activity report you produce today.</li>
+      <li>An Apple Developer account in APTITUD's name for distribution (a fee waiver exists for non-profit organizations).</li>
+      <li>A contact at your DPO to prepare pilot 2.</li>
+    </ol>
+  </section>
+</div>
+
+<div class="page" data-lang="fr" lang="fr" hidden>
+  <header class="intro">
+    <span class="eyebrow">Medipop · présentation pour l'équipe APTITUD · octobre 2026</span>
+    <h1>Medipop pour APTITUD</h1>
+    <p class="lede">Une application pour tablette qui écoute le soignant, remplit un formulaire structuré grâce à une IA qui tourne sur la tablette elle-même, et n'envoie le dossier à APTITUD qu'après sa vérification et sa validation par le soignant.</p>
+    <div class="chips">
+      <span class="chip warn">Pilote 1 · données fictives uniquement</span>
+      <span class="chip">iPad &amp; iPhone · Android prévu</span>
+      <span class="chip">English · Français · Español</span>
+    </div>
+  </header>
+
+  <section>
+    <span class="eyebrow">Fonctionnement</span>
+    <h2>De la dictée au dossier validé</h2>
+    <div class="flow" role="list">
+      <div class="step device" role="listitem"><strong>Dicter</strong><span>Le soignant parle. La tablette transcrit la voix en texte, dans la langue choisie.</span></div>
+      <div class="step device" role="listitem"><strong>Extraire</strong><span>Une IA sur la tablette remplit les champs du formulaire à partir du texte. Aucun serveur n'intervient.</span></div>
+      <div class="step device" role="listitem"><strong>Relire</strong><span>Le soignant corrige les champs si besoin. Rien n'est enregistré sans cette vérification.</span></div>
+      <div class="step device" role="listitem"><strong>Enregistrer</strong><span>Le dossier est stocké sur la tablette : on peut continuer à travailler sans Internet.</span></div>
+      <div class="step" role="listitem"><strong>Synchroniser</strong><span>Dès que le réseau revient, les dossiers partent vers le serveur d'APTITUD. Chaque dossier n'est envoyé qu'une fois, même en cas de nouvel essai.</span></div>
+      <div class="step" role="listitem"><strong>Exploiter</strong><span>Les administrateurs d'APTITUD consultent les dossiers dans le tableau de bord et les exportent.</span></div>
+    </div>
+    <div class="legend"><span><i class="device"></i>Se passe sur la tablette</span><span><i></i>Se passe sur le serveur d'APTITUD</span></div>
+    <p>La dictée d'origine est conservée avec chaque dossier : toute personne qui le relit plus tard sait exactement ce qui a été dit.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Architecture</span>
+    <h2>Trois briques</h2>
+    <p>Medipop est conçu pour que d'autres organismes, dans d'autres pays, utilisent la même application avec leurs propres formulaires et leurs propres serveurs. Ce qui est propre à APTITUD reste privé.</p>
+    <p>Les données à recueillir ne sont pas figées dans l'application. Le formulaire d'addictologie d'APTITUD est une configuration parmi d'autres : un service de psychiatrie ou de cardiologie publierait de la même façon son propre formulaire, ses langues et son modèle IA, sans modifier l'application.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Brique</th><th>Contenu</th><th>Visibilité</th></tr></thead>
+      <tbody>
+        <tr><td><strong>medipop-core</strong></td><td>L'application : dictée, IA sur la tablette, formulaires, validation, stockage local, export.</td><td>Open source (licence MIT)</td></tr>
+        <tr><td><strong>medipop-connectors</strong></td><td>Connexion, organismes et rôles, règles de la base de données, tableau de bord d'administration.</td><td>Open source (licence MIT)</td></tr>
+        <tr><td><strong>medipop-aptitud</strong></td><td>La configuration d'APTITUD : champs du formulaire, vocabulaires, correspondance avec le tableur, rapports, notes de déploiement.</td><td>Privé, réservé à APTITUD</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Écrans</span>
+    <h2>Ce que voient les soignants et les administrateurs</h2>
+    <div class="screens phones">
+      <figure class="phone"><img src="images/app-sign-in.jpg" alt="Écran de connexion avec e-mail et mot de passe"><figcaption>Connexion. Les comptes sont créés par APTITUD ; un nouveau compte ne voit rien tant qu'un administrateur ne l'a pas rattaché à l'organisme.</figcaption></figure>
+      <figure class="phone"><img src="images/app-home.jpg" alt="Accueil avec le formulaire de l'organisme, une carte d'installation du modèle IA et les boutons dictée, saisie, historique et synchronisation"><figcaption>Accueil. Le formulaire de l'organisme, l'invitation à installer l'IA la première fois, la dictée, la saisie manuelle, l'historique et la synchronisation.</figcaption></figure>
+      <figure class="phone"><img src="images/app-dictate.jpg" alt="Écran de dictée avec le choix English, Français, Español et un grand bouton micro"><figcaption>Dictée. Choisir la langue, toucher le micro, parler, puis « Extract fields ».</figcaption></figure>
+      <figure class="phone"><div class="mock" role="img" aria-label="Illustration de l'écran de relecture rempli avec des données fictives">
+        <div class="mock-bar">‹&nbsp;&nbsp;Review Prescription</div>
+        <div class="mock-group"><b>Patient</b>
+          <div class="mock-field"><small>First name</small>Jane</div>
+          <div class="mock-field"><small>Last name</small>Doe</div>
+          <div class="mock-field"><small>Patient ID</small>TEST-0042</div></div>
+        <div class="mock-group"><b>Doctor</b>
+          <div class="mock-field"><small>Last name</small>Martin</div>
+          <div class="mock-field"><small>Doctor ID / license</small>DR-TEST-17</div></div>
+        <div class="mock-group"><b>Medication 1</b>
+          <div class="mock-field"><small>Name *</small>Amoxicillin</div>
+          <div class="mock-row"><div class="mock-field"><small>Strength</small>500 mg</div><div class="mock-field"><small>Form</small>tablet</div></div>
+          <div class="mock-field"><small>Posology</small>1 tablet three times a day</div>
+          <div class="mock-field"><small>Duration</small>7 days</div></div>
+        <div class="mock-dictation"><small>Original dictation</small>“Jane Doe, patient TEST-0042. Amoxicillin 500 milligrams, one tablet three times a day for seven days. Doctor Martin.”</div>
+        <div class="mock-button">Validate &amp; save</div>
+      </div><figcaption>Relecture après extraction (illustration, données fictives). Le soignant vérifie et corrige chaque champ ; la dictée d'origine reste visible. Rien n'est enregistré avant « Validate &amp; save ».</figcaption></figure>
+    </div>
+    <div class="screens wide">
+      <figure><img src="images/dashboard-consultations.jpg" alt="Tableau de bord affichant une consultation validée avec ses champs et la dictée d'origine"><figcaption>Tableau de bord. Les dossiers validés avec leurs champs et la dictée d'origine (dossier de test).</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Configuration</span>
+    <h2>APTITUD pilote l'application depuis le tableau de bord</h2>
+    <p>Un administrateur d'APTITUD règle tout ce qui suit dans le tableau de bord, puis publie. Les tablettes appliquent la nouvelle version à la prochaine ouverture de l'application, jamais au milieu d'une saisie. Les dossiers déjà enregistrés gardent la version du formulaire avec laquelle ils ont été créés.</p>
+    <div class="screens wide">
+      <figure><img src="images/dashboard-config-1.jpg" alt="Page Configuration : nom, couleur, logo et langues de dictée"><figcaption>Nom, couleur et logo affichés dans l'application ; langues de dictée et langue par défaut.</figcaption></figure>
+      <figure><img src="images/dashboard-config-2.jpg" alt="Page Configuration : choix du modèle IA et liste des champs du formulaire"><figcaption>Le modèle IA que téléchargent les tablettes et les champs du formulaire. Chaque publication est versionnée.</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Installation</span>
+    <h2>Préparer une tablette</h2>
+    <ol class="steps">
+      <li><strong>Installer l'application.</strong> Pendant le pilote 1, elle est installée depuis un Mac sur chaque iPad de test. Pour un test plus large, elle sera distribuée par Apple TestFlight : un QR code ouvre la page d'installation.</li>
+      <li><strong>Se connecter</strong> avec le compte créé par APTITUD. La première connexion nécessite Internet.</li>
+      <li><strong>Installer le modèle IA</strong> quand l'application le propose : un téléchargement unique de 1,1 Go, en Wi-Fi, application ouverte. Le fichier est vérifié par son empreinte publiée avant utilisation.</li>
+      <li><strong>Autoriser le micro et la reconnaissance vocale</strong> lors de la première dictée.</li>
+      <li><strong>Travailler normalement.</strong> Sans réseau, les dossiers restent sur la tablette et partent automatiquement au retour de la connexion.</li>
+    </ol>
+  </section>
+
+  <section>
+    <span class="eyebrow">Avancement</span>
+    <h2>Ce qui est fait, ce qui vient</h2>
+    <div class="status">
+      <div>
+        <span class="chip done">Développé et testé</span>
+        <ul>
+          <li>Dictée, extraction sur la tablette, relecture et validation, testées sur iPad</li>
+          <li>Stockage hors ligne et synchronisation automatique sans doublon</li>
+          <li>Connexion, organismes, rôles soignant et administrateur</li>
+          <li>Règles serveur : un organisme ne voit jamais les dossiers d'un autre (tests automatisés)</li>
+          <li>Tableau de bord : dossiers, export JSON, publication de la configuration</li>
+          <li>Dictée en anglais, français et espagnol ; libellés des champs traduits</li>
+          <li>Identité visuelle de l'organisme : nom, couleur, logo</li>
+        </ul>
+      </div>
+      <div>
+        <span class="chip">À venir</span>
+        <ul>
+          <li>Le formulaire APTITUD lui-même, à partir de vos documents</li>
+          <li>Synchronisation dans les deux sens avec le tableur APTITUD</li>
+          <li>Rapports d'activité réguliers</li>
+          <li>Une application publique unique : on se connecte avec son e-mail professionnel et l'application trouve APTITUD toute seule</li>
+          <li>Téléchargement automatique du modèle en arrière-plan</li>
+          <li>Meilleure qualité d'extraction sur de vraies dictées</li>
+          <li>Interface de l'application en français et en espagnol</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Données de santé</span>
+    <h2>Deux pilotes, deux niveaux de protection</h2>
+    <p>Le <strong>pilote 1</strong> utilise uniquement des données fictives, sur une base de données cloud standard. Aucun nom ni détail réel de patient ne doit être saisi, y compris dans les dictées de test.</p>
+    <p>Le <strong>pilote 2</strong> utilise des données réelles. Avant de le lancer : hébergement certifié pour les données de santé (HDS), reconnaissance vocale forcée sur la tablette, stockage chiffré sur la tablette, analyse d'impact (AIPD) validée par le DPO d'APTITUD, et procédure de sauvegarde et de restauration testée.</p>
+    <p class="note"><strong>Pourquoi la reconnaissance vocale compte :</strong> selon l'appareil et la langue, la reconnaissance d'Apple peut envoyer l'audio aux serveurs d'Apple. Pour des données réelles, Medipop refusera de dicter si la reconnaissance ne se fait pas entièrement sur la tablette ; la saisie manuelle reste possible.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Prochaines étapes</span>
+    <h2>Ce dont nous avons besoin d'APTITUD</h2>
+    <ol class="steps">
+      <li>Le formulaire actuel : champs, champs obligatoires, listes de valeurs et règles de validation.</li>
+      <li>Le tableur : les en-têtes de colonnes et une ligne d'exemple inventée.</li>
+      <li>Un exemple du rapport d'activité que vous produisez aujourd'hui.</li>
+      <li>Un compte Apple Developer au nom d'APTITUD pour la distribution (une exonération des frais existe pour les associations).</li>
+      <li>Un contact chez votre DPO pour préparer le pilote 2.</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+  (function () {
+    var pages = document.querySelectorAll('.page[data-lang]');
+    var buttons = document.querySelectorAll('.langbar button');
+    function show(lang) {
+      pages.forEach(function (p) { p.hidden = p.dataset.lang !== lang; });
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === lang)); });
+      document.documentElement.lang = lang;
+      try { localStorage.setItem('medipop-guide-lang', lang); } catch (e) {}
+    }
+    buttons.forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.set); }); });
+    var saved = null;
+    try { saved = localStorage.getItem('medipop-guide-lang'); } catch (e) {}
+    var hash = (location.hash || '').slice(1);
+    show(hash === 'fr' || hash === 'en' ? hash : saved || ((navigator.language || 'en').slice(0, 2) === 'fr' ? 'fr' : 'en'));
+  })();
+</script>
